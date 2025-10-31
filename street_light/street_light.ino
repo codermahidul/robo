@@ -1,26 +1,39 @@
-#define LDR_PIN A0;
-int light_one = 2;
+int mq2Analog = A1;
+int buzzerPin = 8;
+int yellow_pin = 2;
+int red_pin = 3;
+
+
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(LDR_PIN, INPUT);
-  pinMode(light_one, OUTPUT);
-
+  pinMode(mq2Analog, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(red_pin,OUTPUT);
+  digitalWrite(buzzerPin,LOW);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
 
-  int ldr_value = analogRead(LDR_PIN);
-  Serial.println(ldr_value);
-  delay(500);
+  int analogValue = analogRead(mq2Analog);
 
-  if(ldr_value < 600 ){
-    digitalWrite(light_one,HIGH);
+  if(analogValue > 400){
+    digitalWrite(buzzerPin,HIGH);
+    int redPinState = digitalRead(red_pin);
+    digitalWrite(red_pin, !redPinState);
+    delay(100);
+    digitalWrite(buzzerPin,LOW);
   }else{
-    digitalWrite(light_one,LOW);
+    digitalWrite(buzzerPin,LOW);
+    digitalWrite(red_pin, LOW);
+  }
+
+  if(analogValue > 300){
+    digitalWrite(yellow_pin,HIGH);
   }
 
 
+  Serial.println(analogValue);
+
+  delay(1000);
 }
